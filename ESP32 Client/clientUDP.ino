@@ -10,7 +10,8 @@
     Software description: 
     Measure RSSI of any AP that has an SSID that contains 'Measure'
     Store the RSSI values in an array and send them to a python server
-    The server host must have an IP address of 192.168.0.118 port 8787 on the Wireless network
+    The server host must have an IP address of 192.168.0.118 port 8787 on the Wireless network.
+    There is a maximum of 60 other clients
 
     (c) Caelan Murch
 
