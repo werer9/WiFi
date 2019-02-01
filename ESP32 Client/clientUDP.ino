@@ -4,13 +4,13 @@
     Date: 19/12/2018
 
     Project description:
-    Client that sends RSSI data from wifi card to 
-    computer based server. 
+    Client that sends RSSI data from Sparkfun ESP32 Thing board
+    to a server via AP
 
     Software description: 
     Measure RSSI of any AP that has an SSID that contains 'Measure'
     Store the RSSI values in an array and send them to a python server
-    The server host must have an IP address of 192.168.0.118 on the Wireless network
+    The server host must have an IP address of 192.168.0.118 port 8787 on the Wireless network
 
     (c) Caelan Murch
 
@@ -62,7 +62,7 @@ void setup()
     WiFi.softAP(AP_SSID, AP_PASS);
     Serial.println("Started soft-ap... ");
 
-    // connect to wifi
+    // connect to AP
     connectWiFi(NET_SSID, NET_PASS);
 
     // Init transfer buffer
@@ -72,11 +72,11 @@ void setup()
 // Loop function
 void loop() 
 {
-    // number of networks broadcasting
+    // number of networks broadcasting that contain 'Measure' in SSID
     int count = getRSSI(SSID, RSSI);
 
     if (count == 0) {
-        // Do nothing
+        // Do nothing if no 'Measure' APs are found
     } else {
         // set transmit power
         WiFi.setTxPower(WIFI_POWER_19_5dBm);
@@ -110,10 +110,12 @@ int getRSSI(String SSID[], int RSSI[])
     // Set wifi mode
     WiFi.mode(WIFI_AP_STA);
     Serial.println("Scanning networks");
+    // Get number of APs
     int n = WiFi.scanNetworks();
     Serial.println("Finished scanning");
     delay(1000);
     int count = 0;
+    // Check if there are too many APs
     if (n <= 0 || n >= 60) {
         Serial.println("No networks found...");
     } else {
@@ -127,6 +129,7 @@ int getRSSI(String SSID[], int RSSI[])
         }
     }
 
+    // return number of APs that contain 'Measure' in SSID
     return count;
 }
 
