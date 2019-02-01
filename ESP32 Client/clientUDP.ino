@@ -106,7 +106,6 @@ void loop()
 int getRSSI(String SSID[], int RSSI[])
 {
     // number of wifi networks
-    // TODO fix this
     
     // Set wifi mode
     WiFi.mode(WIFI_AP_STA);
