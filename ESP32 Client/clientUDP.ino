@@ -23,7 +23,7 @@
 #include <cstring> // C string library
 
 // Setup wifi information
-const char *AP_SSID = "Measure5";
+const char *AP_SSID = "Measure37";
 const char *AP_PASS = "pass1234";
 
 const char *NET_SSID = "measure";
@@ -122,9 +122,9 @@ int getRSSI(String SSID[], int RSSI[])
     Serial.println("Scanning networks");
     // Get number of APs on channel 11
     WiFi.channel(11);
-    // int n = WiFi.scanNetworks(false, false, true, 300); // <- scan in passive
-    // Scan wifi
-    int n = WiFi.scanNetworks();
+    int n = WiFi.scanNetworks(false, false, true, 300); // <- scan in passive
+    // Scan wifi in active
+    //int n = WiFi.scanNetworks();
     Serial.println("Finished scanning");
     delay(1000);
     int count = 0;
@@ -192,6 +192,7 @@ void WiFiEvent(WiFiEvent_t event)
             break;
         case SYSTEM_EVENT_STA_STOP:
             WiFi.reconnect();
+            delay(2000);
             Serial.println("WiFi clients stopped");
             break;
         case SYSTEM_EVENT_STA_CONNECTED:
