@@ -6,7 +6,7 @@
 #   
 #   Project description:
 #   Server to receive RSSI information from
-#   several MCUs, print it to the terminal real time
+#   many Sparkfun ESP32 Thing boards, print it to the terminal real time
 #   and store the output in a text file.
 # 
 #   (c) Caelan Murch
