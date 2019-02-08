@@ -24,14 +24,14 @@ class UDPHandler(socketserver.BaseRequestHandler):
         # Get data from client
         self.data = self.request[0].strip()
         # get socket used by client
-        socket = self.request[1]
+        # socket = self.request[1]
         # print data from client in file and output
         print("Printing from {}: ".format(self.client_address[0]))
         print(self.data.decode('utf-8'))
         (sender, list) = self.processData(self.data.decode('utf-8'))
         self.logData("log", sender, list)
         # send reply to client
-        socket.sendto("Thanks!".encode('utf-8'), self.client_address)
+        # socket.sendto("Thanks!".encode('utf-8'), self.client_address)
 
     # bubble sort RSSI list
     def __bubbleSort(self, array):
@@ -43,7 +43,7 @@ class UDPHandler(socketserver.BaseRequestHandler):
         while count < len(array):
             # check if every element needs to be swapped
             for i in range(0, len(array)-1):
-                if int(array[i][0]) > int(array[i+1][0]):
+                if int(array[i][0:array[i].find('R')]) > int(array[i+1][0:array[i+1].find('R')]):
                     swap(i, i+1)
             count = count + 1
         return array
@@ -62,7 +62,7 @@ class UDPHandler(socketserver.BaseRequestHandler):
             # if word 'Measure' found is SSID
             if split[i].find('Measure') != -1:
                 # find integer after Measure
-                index = int(split[i][split[i].find('Measure') + 7])
+                index = int(split[i][split[i].find('Measure') + 7:split[i].find('RSSI:')])
                 # make it the first integer is the string follor by R
                 # and then the RSSI integer
                 list.append(str(index) + "R" + str(split[i][split[i].find('RSSI:') + 6:len(split[i])]))
@@ -80,13 +80,14 @@ class UDPHandler(socketserver.BaseRequestHandler):
         filename = filename + " - " + day + ".txt"
         # split sender and tx power
         tx = (sender / 100)/4.0
-        send = int(str(sender)[3:4])
+        send = int(str(sender)[2:len(str(sender))])
         # open log file
         file = open(filename, "a")
-        file.write(time + "From Measure" + str(send) + "\tTX Power: {0:.1f}".format(tx) + "dBm\n")
+        file.write(time + "From: Measure" + str(send) + " TX Power: {0:.1f}".format(tx) + "\n")
         # write a line with SSID and RSSI for each item in list
         for i in range(0, len(list)):
-            file.write(time + "SSID: Measure" + list[i][0] + " RSSI: " + list[i][2:len(list[i])] + "\n")
+            file.write(time + "SSID: Measure" + list[i][0:list[i].find('R')] + " RSSI: " + \
+                list[i][list[i].find('R')+1:len(list[i])] + "\n")
         # close file
         file.close()
 
